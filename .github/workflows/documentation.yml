@@ -82,7 +82,7 @@ jobs:
         site_name: Secure Campus Network System
         site_description: Enterprise-grade network infrastructure for dual-campus university - Master's Project
         site_author: Trabelsi Mohamed Amine
-        site_url: https://github.com/trabelssi/Secure-Campus-Network-System
+        site_url: https://github.com/trabelssi/-Campus-Network-System
         
         theme:
           name: material
@@ -129,7 +129,7 @@ jobs:
         extra:
           social:
             - icon: fontawesome/brands/github
-              link: https://github.com/trabelssi/Secure-Campus-Network-System
+              link: https://github.com/trabelssi/-Campus-Network-System
             - icon: fontawesome/brands/linkedin  
               link: https://www.linkedin.com/in/trabelsi-mohamed-amine
         EOF

@@ -231,7 +231,7 @@ This project demonstrates mastery of:
 For questions or collaboration opportunities:
 - 💼 LinkedIn: [Trabelsi Mohamed Amine](https://www.linkedin.com/in/trabelsi-mohamed-amine)
 - 🐙 GitHub: [trabelssi](https://github.com/trabelssi)
-- 📧 Email: Contact via LinkedIn or GitHub
+- 📧 Email: aminetrabls021@gmail.com
 
 ## 📄 License
 
