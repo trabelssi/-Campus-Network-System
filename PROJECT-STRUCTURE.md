@@ -48,7 +48,10 @@ secure-campus-network-system/
 ├── 📁 configs/                     # ⚙️ Configuration Management
 │   ├── 📄 README.md                # Config documentation
 │   ├── 📁 switches/                # Switch configurations
+│   │   ├── 🔧 core-switch-config.txt
+│   │   └── 🔧 access-switch-config.txt
 │   ├── 📁 firewalls/              # Firewall configurations
+│   │   └── 🔥 asa-hq-config.txt
 │   └── 📁 wireless/                # Wireless configurations
 ├── 
 ├── 📁 scripts/                     # 🤖 Automation Tools

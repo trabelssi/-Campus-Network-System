@@ -1,5 +1,7 @@
 # 🏛️ Secure Campus Network System
 
+> **Topics**: `cisco` `packet-tracer` `networking` `network-security` `ospf` `vlan` `ipsec-vpn` `hsrp` `cisco-asa` `campus-network`
+
 [![Network Design](https://img.shields.io/badge/Network-Design-blue)](https://github.com)
 [![Cisco](https://img.shields.io/badge/Cisco-ASA%20%7C%20Catalyst-orange)](https://cisco.com)
 [![Security](https://img.shields.io/badge/Security-IPsec%20VPN-green)](https://github.com)
@@ -43,6 +45,8 @@ practices and industry standards.
 ![Inter-Campus Connectivity](assets/images/inter-campus-connectivity.png)
 
 ## 📊 IP Addressing Scheme
+
+![IP Addressing Diagram](assets/images/ip-addressing-diagram.png)
 
 | Network Type | IP Range | Hosts | Purpose |
 |-------------|----------|-------|---------|
@@ -172,6 +176,14 @@ secure-campus-network/
 - **Version Control**: Git/GitHub
 - **Testing**: Network simulation and validation
 
+## 🖥️ How to Open the Simulation
+
+1. Download and install [Cisco Packet Tracer 8.x](https://www.netacad.com/courses/packet-tracer) (free with Cisco NetAcad account)
+2. Clone this repository: `git clone https://github.com/trabelssi/-Campus-Network-System.git`
+3. Open Cisco Packet Tracer
+4. Go to File → Open → navigate to `assets/packet-tracer/campus-network-simulation.pkt`
+5. Explore the network topology and run simulations
+
 ## 📈 Performance Metrics
 
 - **Network Latency**: < 50ms inter-campus
@@ -190,14 +202,9 @@ This project represents enterprise network design best practices. We welcome con
 
 Please review our [Contributing Guidelines](CONTRIBUTING.md) before submitting contributions.
 
-## 📄 License
+## 📋 Changelog
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🤝 How to Contribute
-
-We welcome contributions from network engineers, students, and IT professionals! See our 
-[Contributing Guidelines](CONTRIBUTING.md) for details on:
+See [CHANGELOG.md](CHANGELOG.md) for detailed version history and feature updates.
 
 - 🔧 Network design improvements
 - 📚 Documentation enhancements  
@@ -272,3 +279,5 @@ For questions or collaboration opportunities:
 **Author**: [Trabelsi Mohamed Amine](https://github.com/trabelssi) | **LinkedIn**: [Profile](https://www.linkedin.com/in/trabelsi-mohamed-amine)
 
 </div>
+
+<!-- After pushing, go to your repo → click the gear icon ⚙️ next to "About" → add topics: cisco, packet-tracer, networking, network-security, ospf, vlan, ipsec-vpn, hsrp, campus-network -->

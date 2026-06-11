@@ -1,0 +1,148 @@
+!
+! Cisco ASA 5500-X Firewall Configuration
+! Hostname: HQ-FWL
+! Location: Main Campus - Security Perimeter
+! Role: Campus Perimeter Firewall
+! Last Modified: 2024-11-04
+! Author: Trabelsi Mohamed Amine
+!
+ASA Version 9.8(4)
+!
+hostname HQ-FWL
+domain-name campus.university.edu
+!
+enable password Enable789! encrypted
+passwd Console123! encrypted
+!
+!-- Interface Configuration --
+interface GigabitEthernet0/0
+ nameif outside
+ security-level 0
+ ip address 105.100.50.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ nameif inside
+ security-level 100
+ ip address 10.20.20.33 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/2
+ nameif dmz
+ security-level 50
+ ip address 10.20.20.1 255.255.255.224
+ no shutdown
+!
+!-- Static Routes --
+route outside 0.0.0.0 0.0.0.0 105.100.50.1 1
+!
+!-- OSPF Configuration --
+router ospf 1
+ router-id 2.2.2.2
+ area 0 authentication message-digest
+ network 10.20.20.32 255.255.255.252 area 0
+ network 10.20.20.0 255.255.255.224 area 0
+ default-information originate
+!
+!-- Object Groups --
+object-group network DMZ_SERVERS
+ network-object host 10.20.20.10
+ network-object host 10.20.20.11
+ network-object host 10.20.20.12
+ network-object host 10.20.20.13
+ network-object host 10.20.20.14
+!
+object-group service WEB_SERVICES tcp
+ port-object eq www
+ port-object eq https
+!
+object-group service EMAIL_SERVICES tcp
+ port-object eq smtp
+ port-object eq pop3
+ port-object eq imap
+!
+!-- Access Control Lists --
+access-list OUTSIDE_IN extended permit tcp any object-group DMZ_SERVERS object-group WEB_SERVICES
+access-list OUTSIDE_IN extended permit tcp any host 10.20.20.14 object-group EMAIL_SERVICES
+access-list OUTSIDE_IN extended permit udp any host 10.20.20.12 eq domain
+access-list OUTSIDE_IN extended deny ip any any log
+!
+access-list INSIDE_DMZ extended permit tcp 192.168.0.0 255.255.0.0 object-group DMZ_SERVERS
+access-list INSIDE_DMZ extended permit tcp 10.10.0.0 255.255.0.0 object-group DMZ_SERVERS
+access-list INSIDE_DMZ extended permit udp 192.168.0.0 255.255.0.0 host 10.20.20.12 eq domain
+access-list INSIDE_DMZ extended permit udp 10.10.0.0 255.255.0.0 host 10.20.20.12 eq domain
+!
+!-- Apply Access Lists --
+access-group OUTSIDE_IN in interface outside
+access-group INSIDE_DMZ in interface inside
+!
+!-- NAT Configuration --
+object network INSIDE_NETWORK
+ subnet 192.168.0.0 255.255.0.0
+ nat (inside,outside) dynamic interface
+!
+object network WLAN_NETWORK
+ subnet 10.10.0.0 255.255.0.0
+ nat (inside,outside) dynamic interface
+!
+object network WEB_SERVER
+ host 10.20.20.13
+ nat (dmz,outside) static 105.100.50.10
+!
+object network EMAIL_SERVER
+ host 10.20.20.14
+ nat (dmz,outside) static 105.100.50.11
+!
+!-- IPsec VPN Configuration --
+crypto isakmp policy 10
+ authentication pre-share
+ encryption aes-256
+ hash sha
+ group 5
+ lifetime 86400
+!
+crypto isakmp key VpnKey123! address 205.200.100.2
+!
+crypto ipsec transform-set ESP_AES_SHA esp-aes-256 esp-sha-hmac
+!
+access-list VPN_TRAFFIC extended permit ip 192.168.0.0 255.255.0.0 192.168.100.0 255.255.255.0
+access-list VPN_TRAFFIC extended permit ip 10.10.0.0 255.255.0.0 10.11.0.0 255.255.0.0
+!
+crypto map VPN_MAP 10 ipsec-isakmp
+ set peer 205.200.100.2
+ set transform-set ESP_AES_SHA
+ set pfs group5
+ match address VPN_TRAFFIC
+!
+crypto map VPN_MAP interface outside
+!
+tunnel-group 205.200.100.2 type ipsec-l2l
+tunnel-group 205.200.100.2 ipsec-attributes
+ pre-shared-key VpnKey123!
+!
+!-- User Authentication --
+username admin password Admin123!
+username admin attributes
+ privilege-level 15
+!
+!-- SSH Configuration --
+crypto key generate rsa modulus 2048
+ssh 172.16.10.0 255.255.255.0 inside
+ssh version 2
+ssh timeout 10
+!
+!-- Logging Configuration --
+logging enable
+logging timestamp
+logging buffered informational
+logging host inside 172.16.10.50
+!
+!-- Banner --
+banner motd HQ Campus Firewall - Authorized Access Only
+banner asdm Use ASDM only from authorized management stations
+!
+!-- Clock and NTP --
+clock timezone EST -5
+ntp server 172.16.10.100 source inside
+!
+end

@@ -1,29 +1,5 @@
 # Cisco Network Project - Secure Campus Network System
 
-# Cisco Packet Tracer Files
-*.pkt.bak
-*.pktx.bak
-*.pkt~
-
-# Network Configuration Backups
-config_backups/
-*.cfg.bak
-running-config.*
-startup-config.*
-network_report_*.json
-
-# Log Files
-*.log
-logs/
-syslog/
-backup.log
-
-# Temporary Files
-*.tmp
-*.temp
-temp/
-backup_*/
-
 # OS Generated Files
 .DS_Store
 .DS_Store?
@@ -32,6 +8,51 @@ backup_*/
 .Trashes
 ehthumbs.db
 Thumbs.db
+
+# Temporary Files
+*.tmp
+*.temp
+temp/
+backup_*/
+
+# Log Files
+*.log
+logs/
+syslog/
+backup.log
+
+# Python Environment
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv
+pip-log.txt
+
+# Environment Files
+.env
+.env.local
+.env.production
+.env.development
+
+# Backup Files
+*.bak
+*.backup
+config_backups/
+*.cfg.bak
+running-config.*
+startup-config.*
+network_report_*.json
+
+# Cisco Packet Tracer Files
+*.pkt.bak
+*.pktx.bak
+*.pkt~
 
 # IDE and Editor Files
 .vscode/
@@ -45,17 +66,6 @@ docs/_build/
 docs/site/
 site/
 .mkdocs/
-
-# Python Environment
-__pycache__/
-*.py[cod]
-*$py.class
-*.so
-.Python
-env/
-venv/
-.venv
-pip-log.txt
 
 # Sensitive Information
 credentials/

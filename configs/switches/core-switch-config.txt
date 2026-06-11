@@ -1,0 +1,142 @@
+!
+! Cisco Catalyst 3850 Core Switch Configuration
+! Hostname: HQ-MLSW1
+! Location: Main Campus - Core Network Room
+! Role: Core Multilayer Switch
+! Last Modified: 2024-11-04
+! Author: Trabelsi Mohamed Amine
+!
+version 16.12
+!
+hostname HQ-MLSW1
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+no aaa new-model
+!
+ip domain-name campus.university.edu
+!
+!-- VLAN Configuration --
+vlan 10
+ name Management
+!
+vlan 20
+ name LAN_Users
+!
+vlan 50
+ name WLAN_Users
+!
+vlan 199
+ name BlackHole
+ shutdown
+!
+!-- SVI Configuration --
+interface Vlan10
+ description Management Network
+ ip address 172.16.10.2 255.255.255.0
+ ip helper-address 10.20.20.10
+ standby 10 ip 172.16.10.1
+ standby 10 priority 110
+ standby 10 preempt
+ no shutdown
+!
+interface Vlan20
+ description LAN Users Network
+ ip address 192.168.0.2 255.255.0.0
+ ip helper-address 10.20.20.10
+ standby 20 ip 192.168.0.1
+ standby 20 priority 110
+ standby 20 preempt
+ no shutdown
+!
+interface Vlan50
+ description WLAN Users Network
+ ip address 10.10.0.2 255.255.0.0
+ ip helper-address 10.20.20.10
+ standby 50 ip 10.10.0.1
+ standby 50 priority 110
+ standby 50 preempt
+ no shutdown
+!
+!-- Physical Interface Configuration --
+interface GigabitEthernet1/0/1
+ description Link to HQ-ASA-FW01
+ no switchport
+ ip address 10.20.20.34 255.255.255.252
+ ip ospf 1 area 0
+ no shutdown
+!
+interface GigabitEthernet1/0/47
+ description Trunk to Access Switches
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,50
+ channel-group 1 mode active
+ no shutdown
+!
+interface GigabitEthernet1/0/48
+ description Trunk to Access Switches
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,50
+ channel-group 1 mode active
+ no shutdown
+!
+interface Port-channel1
+ description EtherChannel to Access Layer
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,50
+!
+!-- OSPF Configuration --
+router ospf 1
+ router-id 1.1.1.1
+ area 0 authentication message-digest
+ network 172.16.10.0 0.0.0.255 area 0
+ network 192.168.0.0 0.0.255.255 area 0
+ network 10.10.0.0 0.0.255.255 area 0
+ network 10.20.20.32 0.0.0.3 area 0
+ passive-interface default
+ no passive-interface GigabitEthernet1/0/1
+!
+!-- SSH and Security Configuration --
+crypto key generate rsa general-keys modulus 2048
+ip ssh version 2
+ip ssh time-out 60
+!
+!-- Access Control List for SSH --
+ip access-list standard ADMIN_SSH
+ permit host 192.168.1.100
+ deny any
+!
+!-- VTY Line Configuration --
+line vty 0 15
+ transport input ssh
+ access-class ADMIN_SSH in
+ login local
+ exec-timeout 15 0
+!
+!-- User Configuration --
+username admin privilege 15 secret Admin123!
+!
+!-- Banner Configuration --
+banner motd ^
+*********************************************************
+* Authorized Access Only - HQ Campus Core Switch       *
+* All network activity is monitored and logged.        *
+* Unauthorized access is strictly prohibited.          *
+* Contact: Network Operations Center                    *
+*********************************************************
+^
+!
+!-- Spanning Tree Configuration --
+spanning-tree mode rapid-pvst
+spanning-tree vlan 10,20,50 root primary
+!
+!-- Additional Security Settings --
+service password-encryption
+no ip http server
+no ip http secure-server
+ip domain-lookup
+!
+end

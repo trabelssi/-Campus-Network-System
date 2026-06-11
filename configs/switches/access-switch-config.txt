@@ -1,0 +1,153 @@
+!
+! Cisco Catalyst 2960 Access Switch Configuration
+! Hostname: HQ-ACC-SW1
+! Location: Main Campus - Health Sciences Building
+! Role: Access Layer Switch
+! Last Modified: 2024-11-04
+! Author: Trabelsi Mohamed Amine
+!
+version 15.2
+!
+hostname HQ-ACC-SW1
+!
+enable secret 5 $1$mERr$hx5rVt7rPNoS4wqbXKX7m0
+!
+no aaa new-model
+!
+ip domain-name campus.university.edu
+!
+!-- VLAN Configuration --
+vlan 10
+ name Management
+!
+vlan 20
+ name LAN_Users
+!
+vlan 50
+ name WLAN_Users
+!
+vlan 199
+ name BlackHole
+ shutdown
+!
+!-- Management Interface --
+interface Vlan10
+ description Management Interface
+ ip address 172.16.10.10 255.255.255.0
+ no shutdown
+!
+ip default-gateway 172.16.10.1
+!
+!-- Access Port Configuration --
+interface range FastEthernet0/1-24
+ description User Access Ports - Health Sciences Faculty
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security mac-address sticky
+ switchport port-security violation shutdown
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+!-- Wireless Access Point Ports --
+interface FastEthernet0/25
+ description Wireless Access Point - Health Sciences AP1
+ switchport mode access
+ switchport access vlan 50
+ spanning-tree portfast
+ no shutdown
+!
+interface FastEthernet0/26
+ description Wireless Access Point - Health Sciences AP2
+ switchport mode access
+ switchport access vlan 50
+ spanning-tree portfast
+ no shutdown
+!
+!-- Unused Ports (BlackHole VLAN) --
+interface range FastEthernet0/27-46
+ description Unused Ports - Security BlackHole
+ switchport mode access
+ switchport access vlan 199
+ shutdown
+!
+!-- Trunk Uplink to Core --
+interface GigabitEthernet0/1
+ description Trunk Uplink to HQ-MLSW1
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,50,199
+ switchport trunk native vlan 1
+ no shutdown
+!
+interface GigabitEthernet0/2
+ description Trunk Uplink to HQ-MLSW2 (Redundant)
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,50,199
+ switchport trunk native vlan 1
+ shutdown
+!
+!-- Spanning Tree Configuration --
+spanning-tree mode rapid-pvst
+spanning-tree portfast default
+spanning-tree portfast bpduguard default
+spanning-tree vlan 10 priority 32768
+spanning-tree vlan 20 priority 32768
+spanning-tree vlan 50 priority 32768
+!
+!-- SSH Configuration --
+crypto key generate rsa general-keys modulus 1024
+ip ssh version 2
+ip ssh time-out 60
+!
+!-- Access Control for SSH --
+ip access-list standard ADMIN_SSH
+ permit host 192.168.1.100
+ permit 172.16.10.0 0.0.0.255
+ deny any
+!
+!-- VTY Configuration --
+line vty 0 4
+ transport input ssh
+ access-class ADMIN_SSH in
+ login local
+ exec-timeout 15 0
+!
+!-- Console Configuration --
+line console 0
+ password Console123!
+ login
+ exec-timeout 15 0
+ logging synchronous
+!
+!-- Local User --
+username admin privilege 15 secret Admin123!
+!
+!-- Banner --
+banner motd ^
+*********************************************************
+* Health Sciences Building Access Switch                *
+* Authorized Access Only                                *
+* All activity is monitored and logged                 *
+* Contact: Network Operations at ext. 2200             *
+*********************************************************
+^
+!
+!-- Additional Security --
+service password-encryption
+no ip http server
+no ip http secure-server
+no cdp run
+!
+!-- SNMP Configuration (Read-Only) --
+snmp-server community ReadOnly RO 10
+snmp-server location "Health Sciences Building - Floor 1"
+snmp-server contact "Network Operations Center"
+!
+!-- Logging --
+logging buffered 16384
+service timestamps log datetime msec
+service timestamps debug datetime msec
+!
+end
