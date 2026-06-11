@@ -168,7 +168,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 For questions about specific versions or to report issues:
 
 - **Issues**: [GitHub Issues](https://github.com/trabelssi/-Campus-Network-System/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/trabelssi/-Campus-Network-System/discussions)
 - **Email**: aminetrabls021@gmail.com
 
 ## 🏆 Contributors
