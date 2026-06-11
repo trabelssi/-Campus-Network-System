@@ -1,0 +1,74 @@
+# Cisco Network Project - Secure Campus Network System
+
+# Cisco Packet Tracer Files
+*.pkt.bak
+*.pktx.bak
+*.pkt~
+
+# Network Configuration Backups
+config_backups/
+*.cfg.bak
+running-config.*
+startup-config.*
+network_report_*.json
+
+# Log Files
+*.log
+logs/
+syslog/
+backup.log
+
+# Temporary Files
+*.tmp
+*.temp
+temp/
+backup_*/
+
+# OS Generated Files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE and Editor Files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Documentation Build Files
+docs/_build/
+docs/site/
+site/
+.mkdocs/
+
+# Python Environment
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.venv
+pip-log.txt
+
+# Sensitive Information
+credentials/
+passwords.txt
+*.key
+*.pem
+secrets/
+
+# Device-specific configs with real passwords
+*-config-with-passwords.txt
+*-production.cfg
+
+# Large Files (recommend using Git LFS)
+*.iso
+*.ova
+*.vmdk

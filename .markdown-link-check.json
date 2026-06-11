@@ -1,0 +1,30 @@
+{
+  "timeout": "20s",
+  "retryOn429": true,
+  "retryCount": 3,
+  "fallbackProtocol": "https",
+  "aliveStatusCodes": [200, 206, 300, 301, 302, 303, 304, 307, 308],
+  "ignorePatterns": [
+    {
+      "pattern": "^http://localhost"
+    },
+    {
+      "pattern": "^https://localhost"
+    },
+    {
+      "pattern": "^file://"
+    },
+    {
+      "pattern": "^mailto:"
+    },
+    {
+      "pattern": "192\\.168\\."
+    },
+    {
+      "pattern": "172\\.16\\."
+    },
+    {
+      "pattern": "10\\."
+    }
+  ]
+}
