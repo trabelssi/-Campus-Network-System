@@ -46,12 +46,8 @@ practices and industry standards.
 
 ![Campus Network Architecture](assets/images/network-connectivity-diagram.png)
 
-## 📊 IP Addressing Scheme
 
-![IP Addressing Diagram](assets/images/ip-addressing-diagram.png)
-![Inter-Campus Connectivity](assets/images/inter-campus-connectivity.png)
-
-### Core Infrastructure Networks
+### Core Infrastructure Networks and IP Addressing 
 
 | Network Type | IP Range | Hosts | Purpose |
 | ----------- | -------- | ----- | ------- |
