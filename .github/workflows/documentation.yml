@@ -30,16 +30,18 @@ jobs:
         
     - name: Install markdown lint
       run: |
-        npm install -g markdownlint-cli
-        npm install -g markdown-link-check
+        npm install -g markdownlint-cli@0.39.0
         
     - name: Check markdown formatting
       run: |
         markdownlint docs/ README.md CONTRIBUTING.md --ignore node_modules --config .markdownlint.json
         
     - name: Check markdown links
-      run: |
-        find . -name "*.md" -not -path "./node_modules/*" | xargs markdown-link-check --config .markdown-link-check.json
+      uses: gaurav-nelson/github-action-markdown-link-check@v1
+      with:
+        config-file: '.markdown-link-check.json'
+        use-quiet-mode: 'yes'
+        use-verbose-mode: 'no'
         
     - name: Validate network diagrams exist
       run: |
@@ -52,7 +54,7 @@ jobs:
     - name: Check Packet Tracer file
       run: |
         echo "Checking for Packet Tracer simulation file..."
-        test -f "Campus Area Network System Design & Implementation.pkt" || (echo "Missing: .pkt file" && exit 1)
+        test -f "assets/packet-tracer/Campus Area Network System Design & Implementation.pkt" || (echo "Missing: .pkt file" && exit 1)
         echo "✅ Packet Tracer file found"
 
   generate-docs:
