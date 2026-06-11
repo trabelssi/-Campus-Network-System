@@ -1,6 +1,7 @@
 # 🤝 Contributing to Secure Campus Network System
 
-Thank you for your interest in contributing to the Secure Campus Network System project! This document provides guidelines for contributing to this enterprise network design and implementation project.
+Thank you for your interest in contributing to the Secure Campus Network System project! This document provides 
+guidelines for contributing to this enterprise network design and implementation project.
 
 ## 📋 Table of Contents
 
@@ -15,7 +16,8 @@ Thank you for your interest in contributing to the Secure Campus Network System 
 ## 🎯 Code of Conduct
 
 ### Our Pledge
-We are committed to providing a welcoming and inclusive experience for all contributors, regardless of experience level, background, or expertise in networking.
+We are committed to providing a welcoming and inclusive experience for all contributors, regardless of 
+experience level, background, or expertise in networking.
 
 ### Expected Behavior
 - **Professional Communication**: Use clear, respectful language in all interactions

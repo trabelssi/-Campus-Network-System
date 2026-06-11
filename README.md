@@ -7,7 +7,10 @@
 
 ## 📋 Project Overview
 
-A comprehensive **enterprise-grade network infrastructure** designed for a dual-campus university system supporting 30,000+ users with projected growth to 60,000 by 2025. This Master's degree project demonstrates advanced network design principles, enterprise security implementation, and scalable infrastructure planning following Cisco best practices and industry standards.
+A comprehensive **enterprise-grade network infrastructure** designed for a dual-campus university system supporting 
+30,000+ users with projected growth to 60,000 by 2025. This Master's degree project demonstrates advanced network 
+design principles, enterprise security implementation, and scalable infrastructure planning following Cisco best 
+practices and industry standards.
 
 ### 🎯 Key Features
 
@@ -21,11 +24,13 @@ A comprehensive **enterprise-grade network infrastructure** designed for a dual-
 ## 🏗️ Network Architecture
 
 ### Campus Infrastructure
+
 - **Main Campus**: Centralized IT hub with server farm (DMZ)
 - **Branch Campus**: Remote location 100 miles from main campus
 - **Faculties**: Health & Sciences, Business, Engineering/Computing, Art/Design
 
 ### Technical Specifications
+
 - **Current Users**: 30,000 across both campuses
 - **Projected Growth**: 60,000 users by 2025
 - **Network Segments**: 4 VLANs with dedicated security zones
@@ -51,6 +56,7 @@ A comprehensive **enterprise-grade network infrastructure** designed for a dual-
 ## 🔧 Technology Stack
 
 ### Network Equipment
+
 - **Firewalls**: Cisco ASA 5500-X Series
 - **Core Switches**: Cisco Catalyst 3850 (48-port)
 - **Access Switches**: Cisco Catalyst 2960 (48-port)
@@ -58,6 +64,7 @@ A comprehensive **enterprise-grade network infrastructure** designed for a dual-
 - **Access Points**: Cisco Lightweight APs
 
 ### Protocols & Standards
+
 - **Routing**: OSPF (Open Shortest Path First)
 - **VLAN**: 802.1Q Trunking
 - **Security**: IPsec VPN, Zone-based Firewalling
@@ -67,7 +74,8 @@ A comprehensive **enterprise-grade network infrastructure** designed for a dual-
 ## 🛡️ Security Implementation
 
 ### Network Segmentation
-```
+
+```text
 VLAN 10  - Management Network
 VLAN 20  - LAN Users
 VLAN 50  - WLAN Users  
@@ -75,6 +83,7 @@ VLAN 199 - Black Hole (Unused Ports)
 ```
 
 ### Security Features
+
 - ✅ **Zone-based Firewall Policies**
 - ✅ **IPsec Site-to-Site VPN**
 - ✅ **Standard ACLs for SSH Access**
@@ -84,28 +93,32 @@ VLAN 199 - Black Hole (Unused Ports)
 ## 🚀 Implementation Guide
 
 ### Phase 1: Infrastructure Setup
+
 1. **Network Design & Documentation**
 2. **Basic Device Configuration**
 3. **VLAN Implementation**
 
 ### Phase 2: Core Services
+
 4. **EtherChannel Configuration**
 5. **IP Addressing & Subnetting**
 6. **HSRP & Inter-VLAN Routing**
 
 ### Phase 3: Advanced Features
+
 7. **DHCP Server Deployment**
 8. **OSPF Routing Protocol**
 9. **Firewall Security Policies**
 
 ### Phase 4: Connectivity & Testing
+
 10. **Wireless Network Setup**
 11. **IPsec VPN Configuration**
 12. **End-to-end Testing & Validation**
 
 ## 📁 Project Structure
 
-```
+```text
 secure-campus-network/
 ├── README.md
 ├── CONTRIBUTING.md
@@ -181,9 +194,10 @@ Please review our [Contributing Guidelines](CONTRIBUTING.md) before submitting c
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🤝 Contributing
+## 🤝 How to Contribute
 
-We welcome contributions from network engineers, students, and IT professionals! See our [Contributing Guidelines](CONTRIBUTING.md) for details on:
+We welcome contributions from network engineers, students, and IT professionals! See our 
+[Contributing Guidelines](CONTRIBUTING.md) for details on:
 
 - 🔧 Network design improvements
 - 📚 Documentation enhancements  
@@ -229,13 +243,10 @@ This project demonstrates mastery of:
 **Institution**: University Network Infrastructure Project  
 
 For questions or collaboration opportunities:
+
 - 💼 LinkedIn: [Trabelsi Mohamed Amine](https://www.linkedin.com/in/trabelsi-mohamed-amine)
 - 🐙 GitHub: [trabelssi](https://github.com/trabelssi)
-- 📧 Email: aminetrabls021@gmail.com
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+- 📧 Email: <aminetrabls021@gmail.com>
 
 ## 🙏 Acknowledgments
 
@@ -257,8 +268,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 [![Network Design](https://img.shields.io/badge/design-enterprise-orange)](docs/ARCHITECTURE.md)
 [![Academic Project](https://img.shields.io/badge/academic-master's%20degree-purple)](https://www.linkedin.com/in/trabelsi-mohamed-amine)
-
-*A comprehensive network infrastructure project demonstrating enterprise-grade design principles*
 
 **Author**: [Trabelsi Mohamed Amine](https://github.com/trabelssi) | **LinkedIn**: [Profile](https://www.linkedin.com/in/trabelsi-mohamed-amine)
 
