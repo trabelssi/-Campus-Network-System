@@ -179,7 +179,7 @@ secure-campus-network/
 │   │   ├── campus-network.png
 │   │   └── network-connectivity-diagram.png
 │   └── packet-tracer/
-│       └── campus-network-simulation.pkt
+│       └── Campus Area Network System Design & Implementation.pkt
 ├── configs/
 │   ├── switches/
 │   ├── firewalls/
@@ -203,7 +203,7 @@ secure-campus-network/
 ## 🛠️ Tools & Simulation
 
 - **Design Tool**: Cisco Packet Tracer
-- **Simulation File**: [Campus Network Design](assets/packet-tracer/campus-network-simulation.pkt)
+- **Simulation File**: [Campus Network Design](assets/packet-tracer/Campus%20Area%20Network%20System%20Design%20%26%20Implementation.pkt)
 - **Documentation**: Markdown & Professional Diagrams
 - **Version Control**: Git/GitHub
 - **Testing**: Network simulation and validation
@@ -214,7 +214,7 @@ secure-campus-network/
    (free with Cisco NetAcad account)
 2. Clone this repository: `git clone https://github.com/trabelssi/-Campus-Network-System.git`
 3. Open Cisco Packet Tracer
-4. Go to File → Open → navigate to `assets/packet-tracer/campus-network-simulation.pkt`
+4. Go to File → Open → navigate to `assets/packet-tracer/Campus Area Network System Design & Implementation.pkt`
 5. Explore the network topology and run simulations
 
 ## 📈 Performance Metrics

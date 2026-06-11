@@ -25,6 +25,12 @@
     },
     {
       "pattern": "10\\."
+    },
+    {
+      "pattern": "linkedin\\.com"
+    },
+    {
+      "pattern": "\\.pkt$"
     }
   ]
 }

@@ -80,8 +80,8 @@ Before contributing, ensure you have:
 
 1. **Fork the Repository**
    ```bash
-   git clone https://github.com/yourusername/secure-campus-network-system.git
-   cd secure-campus-network-system
+   git clone https://github.com/trabelssi/-Campus-Network-System.git
+   cd -Campus-Network-System
    ```
 
 2. **Create a Feature Branch**
