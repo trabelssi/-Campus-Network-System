@@ -34,8 +34,8 @@ practices and industry standards.
 ### Technical Specifications
 
 - **Current Users**: 30,000 across both campuses
-- **Projected Growth**: 60,000 users by 2025
-- **Network Segments**: 4 VLANs with dedicated security zones
+- **Projected Growth**: 60,000 users by 2027
+- **Network Segments**: 12 VLANs with faculty-level segmentation
 - **Connectivity**: Site-to-site VPN with 99.9% uptime SLA
 
 ## 🌐 Network Topology
@@ -48,14 +48,31 @@ practices and industry standards.
 
 ![IP Addressing Diagram](assets/images/ip-addressing-diagram.png)
 
+### Core Infrastructure Networks
+
 | Network Type | IP Range | Hosts | Purpose |
 | ----------- | -------- | ----- | ------- |
-| **Management** | `172.16.10.0/24` | 254 | Network management |
-| **WLAN** | `10.10.0.0/16` | 65,534 | Wireless clients |
-| **LAN** | `192.168.0.0/16` | 65,534 | Wired clients |
-| **DMZ** | `10.20.20.0/27` | 30 | Server farm |
-| **Public (Main)** | `105.100.50.0/30` | 2 | Internet connectivity |
-| **Public (Branch)** | `205.200.100.0/30` | 2 | Internet connectivity |
+| **Management** | `10.255.0.0/24` | 254 | Network device management |
+| **DMZ Servers** | `172.16.100.0/24` | 254 | Server farm (scalable) |
+| **Voice/VoIP** | `10.240.0.0/20` | 4,094 | IP Telephony |
+| **Public (Main)** | `105.100.50.0/30` | 2 | Internet - Main Campus |
+| **Public (Branch)** | `205.200.100.0/30` | 2 | Internet - Branch Campus |
+| **VPN Tunnel** | `10.254.0.0/30` | 2 | Site-to-Site IPsec |
+
+### Faculty & User Networks
+
+| Faculty | VLAN | IP Range | Hosts | Purpose |
+| ------- | ---- | -------- | ----- | ------- |
+| **Health & Sciences** | 20 | `192.168.20.0/22` | 1,022 | Faculty LAN |
+| **Health & Sciences WiFi** | 21 | `10.20.0.0/20` | 4,094 | Faculty WLAN |
+| **Business** | 30 | `192.168.30.0/22` | 1,022 | Faculty LAN |
+| **Business WiFi** | 31 | `10.30.0.0/20` | 4,094 | Faculty WLAN |
+| **Engineering/Computing** | 40 | `192.168.40.0/22` | 1,022 | Faculty LAN |
+| **Engineering WiFi** | 41 | `10.40.0.0/20` | 4,094 | Faculty WLAN |
+| **Art/Design** | 50 | `192.168.50.0/22` | 1,022 | Faculty LAN |
+| **Art/Design WiFi** | 51 | `10.50.0.0/20` | 4,094 | Faculty WLAN |
+| **Guest Network** | 100 | `10.100.0.0/20` | 4,094 | Guest WiFi (isolated) |
+| **Black Hole** | 999 | - | - | Unused ports security |
 
 ## 🔧 Technology Stack
 
@@ -69,30 +86,45 @@ practices and industry standards.
 
 ### Protocols & Standards
 
-- **Routing**: OSPF (Open Shortest Path First)
-- **VLAN**: 802.1Q Trunking
-- **Security**: IPsec VPN, Zone-based Firewalling
-- **High Availability**: HSRP (Hot Standby Router Protocol)
+- **Routing**: OSPF Multi-Area (Area 0, 1, 2)
+- **VLAN**: 802.1Q Trunking with Private VLANs
+- **Security**: IPsec VPN, Extended ACLs, Zone-based Firewalling
+- **High Availability**: HSRP + VRRP (Hot Standby Router Protocol)
 - **Link Aggregation**: LACP EtherChannel
+- **IPv6**: Dual-stack ready (IPv4/IPv6)
+- **NAT/PAT**: Dynamic PAT for internet access
 
 ## 🛡️ Security Implementation
 
-### Network Segmentation
+### Network Segmentation - Faculty Isolation
 
 ```text
-VLAN 10  - Management Network
-VLAN 20  - LAN Users
-VLAN 50  - WLAN Users
-VLAN 199 - Black Hole (Unused Ports)
+VLAN 10   - Management Network (Network Devices)
+VLAN 20   - Health & Sciences LAN
+VLAN 21   - Health & Sciences WLAN
+VLAN 30   - Business Faculty LAN
+VLAN 31   - Business Faculty WLAN
+VLAN 40   - Engineering/Computing LAN
+VLAN 41   - Engineering/Computing WLAN
+VLAN 50   - Art/Design LAN
+VLAN 51   - Art/Design WLAN
+VLAN 60   - Voice/VoIP (QoS Priority)
+VLAN 100  - Guest WiFi (Internet-only, isolated)
+VLAN 172  - DMZ Server Farm
+VLAN 999  - Black Hole (Unused Ports)
 ```
 
 ### Security Features
 
-- ✅ **Zone-based Firewall Policies**
-- ✅ **IPsec Site-to-Site VPN**
-- ✅ **Standard ACLs for SSH Access**
+- ✅ **Zone-based Firewall Policies** (DMZ, Inside, Outside)
+- ✅ **IPsec Site-to-Site VPN** (AES-256, SHA-256)
+- ✅ **Extended ACLs** for inter-VLAN and SSH management
+- ✅ **Faculty-Level Isolation** (Inter-faculty ACLs)
+- ✅ **NAT/PAT Configuration** (Dynamic PAT + Static NAT for servers)
 - ✅ **STP PortFast & BPDU Guard**
-- ✅ **DMZ Server Isolation**
+- ✅ **DMZ Server Isolation** (/24 for scalability)
+- ✅ **Guest Network Isolation** (Internet-only access)
+- ✅ **802.1X Port Security** (Planned)
 
 ## 🚀 Implementation Guide
 

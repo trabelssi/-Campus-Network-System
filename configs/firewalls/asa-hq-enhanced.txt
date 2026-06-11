@@ -1,0 +1,320 @@
+!
+! Cisco ASA 5500-X Firewall Configuration - ENHANCED
+! Hostname: HQ-FW-ASA01
+! Location: Main Campus - Perimeter Security
+! Role: Edge Firewall with VPN Termination
+! Last Modified: 2024-12-11
+! Author: Trabelsi Mohamed Amine
+! Project: Secure Campus Network System - Master's Degree
+!
+ASA Version 9.16(3)
+!
+hostname HQ-FW-ASA01
+domain-name campus.university.edu
+!
+enable password $sha512$encrypted$hash123456789
+!
+!-- Interface Configuration --
+!
+interface GigabitEthernet0/0
+ nameif outside
+ security-level 0
+ ip address 105.100.50.2 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/1
+ nameif inside
+ security-level 100
+ ip address 172.16.99.1 255.255.255.252
+ no shutdown
+!
+interface GigabitEthernet0/2
+ nameif dmz
+ security-level 50
+ ip address 172.16.100.254 255.255.255.0
+ no shutdown
+!
+interface GigabitEthernet0/3
+ nameif management
+ security-level 90
+ ip address 10.255.0.254 255.255.255.0
+ no shutdown
+!
+!-- Object Groups for Simplified ACLs --
+!
+object-group network INTERNAL_NETWORKS
+ description All Internal Campus Networks
+ network-object 192.168.0.0 255.255.0.0
+ network-object 10.0.0.0 255.0.0.0
+ network-object 172.16.0.0 255.240.0.0
+!
+object-group network DMZ_SERVERS
+ description DMZ Server Farm
+ network-object host 172.16.100.10
+ network-object host 172.16.100.15
+ network-object host 172.16.100.20
+ network-object host 172.16.100.25
+!
+object-group service WEB_SERVICES
+ description HTTP and HTTPS
+ service-object tcp eq 80
+ service-object tcp eq 443
+!
+object-group service MAIL_SERVICES
+ description Email Services
+ service-object tcp eq smtp
+ service-object tcp eq 587
+ service-object tcp eq 993
+!
+!-- Dynamic PAT for Internet Access --
+!
+object network INSIDE_NAT
+ subnet 0.0.0.0 0.0.0.0
+ nat (inside,outside) dynamic interface
+!
+object network MANAGEMENT_NAT
+ subnet 10.255.0.0 255.255.255.0
+ nat (management,outside) dynamic interface
+!
+!-- Static NAT for DMZ Servers --
+!
+object network WEB_SERVER
+ host 172.16.100.10
+ nat (dmz,outside) static 105.100.50.10
+!
+object network MAIL_SERVER
+ host 172.16.100.15
+ nat (dmz,outside) static 105.100.50.15
+!
+object network DNS_SERVER
+ host 172.16.100.20
+ nat (dmz,outside) static 105.100.50.20
+!
+object network FTP_SERVER
+ host 172.16.100.25
+ nat (dmz,outside) static 105.100.50.25
+!
+!-- Access Control Lists --
+!
+!-- Outside to DMZ (Inbound from Internet) --
+access-list OUTSIDE_IN extended permit tcp any object WEB_SERVER object-group WEB_SERVICES
+access-list OUTSIDE_IN extended permit tcp any object MAIL_SERVER object-group MAIL_SERVICES
+access-list OUTSIDE_IN extended permit udp any object DNS_SERVER eq domain
+access-list OUTSIDE_IN extended permit tcp any object FTP_SERVER eq ftp
+access-list OUTSIDE_IN extended permit tcp any object FTP_SERVER eq ftp-data
+access-list OUTSIDE_IN extended deny ip any any log
+!
+access-group OUTSIDE_IN in interface outside
+!
+!-- Inside to Outside (Outbound Internet) --
+access-list INSIDE_OUT extended permit ip object-group INTERNAL_NETWORKS any
+access-list INSIDE_OUT extended deny ip any any log
+!
+access-group INSIDE_OUT in interface inside
+!
+!-- Inside to DMZ (Access to Internal Servers) --
+access-list INSIDE_DMZ extended permit tcp object-group INTERNAL_NETWORKS object-group DMZ_SERVERS object-group WEB_SERVICES
+access-list INSIDE_DMZ extended permit tcp object-group INTERNAL_NETWORKS object-group DMZ_SERVERS object-group MAIL_SERVICES
+access-list INSIDE_DMZ extended permit udp object-group INTERNAL_NETWORKS object-group DMZ_SERVERS eq domain
+access-list INSIDE_DMZ extended permit tcp object-group INTERNAL_NETWORKS object-group DMZ_SERVERS eq 3389
+access-list INSIDE_DMZ extended permit tcp object-group INTERNAL_NETWORKS object-group DMZ_SERVERS eq 22
+access-list INSIDE_DMZ extended deny ip any any log
+!
+!-- DMZ to Inside (Restricted - No Direct Access) --
+access-list DMZ_INSIDE extended deny ip any any log
+!
+!-- Management Interface ACL --
+access-list MGMT_IN extended permit tcp 10.255.0.0 255.255.255.0 any eq ssh
+access-list MGMT_IN extended permit tcp 10.255.0.0 255.255.255.0 any eq https
+access-list MGMT_IN extended permit icmp 10.255.0.0 255.255.255.0 any
+access-list MGMT_IN extended deny ip any any log
+!
+access-group MGMT_IN in interface management
+!
+!-- Default Routes --
+!
+route outside 0.0.0.0 0.0.0.0 105.100.50.1 1
+route inside 192.168.0.0 255.255.0.0 172.16.99.2 1
+route inside 10.0.0.0 255.0.0.0 172.16.99.2 1
+!
+!-- OSPF Configuration --
+!
+router ospf 1
+ router-id 10.255.0.253
+ network 172.16.99.0 255.255.255.252 area 0
+ network 172.16.100.0 255.255.255.0 area 0
+ network 10.255.0.0 255.255.255.0 area 0
+ area 0 authentication message-digest
+ log-adj-changes
+ default-information originate
+!
+!-- IPsec VPN Configuration - Site-to-Site --
+!
+crypto isakmp policy 10
+ encryption aes-256
+ hash sha256
+ authentication pre-share
+ group 14
+ lifetime 28800
+!
+crypto isakmp key VpnSecureKey123! address 205.200.100.2 netmask 255.255.255.255
+!
+crypto ipsec ikev2 ipsec-proposal VPN_PROPOSAL
+ protocol esp encryption aes-256
+ protocol esp integrity sha-256
+!
+crypto ipsec profile VPN_PROFILE
+ set ikev2 ipsec-proposal VPN_PROPOSAL
+ set pfs group14
+ set security-association lifetime seconds 3600
+!
+crypto map SITE_TO_SITE_MAP 10 match address VPN_TRAFFIC
+crypto map SITE_TO_SITE_MAP 10 set peer 205.200.100.2
+crypto map SITE_TO_SITE_MAP 10 set ikev2 ipsec-proposal VPN_PROPOSAL
+crypto map SITE_TO_SITE_MAP 10 set pfs group14
+crypto map SITE_TO_SITE_MAP interface outside
+!
+access-list VPN_TRAFFIC extended permit ip 192.168.0.0 255.255.0.0 192.168.100.0 255.255.0.0
+access-list VPN_TRAFFIC extended permit ip 10.0.0.0 255.0.0.0 10.128.0.0 255.128.0.0
+!
+tunnel-group 205.200.100.2 type ipsec-l2l
+tunnel-group 205.200.100.2 ipsec-attributes
+ ikev2 remote-authentication pre-shared-key VpnSecureKey123!
+ ikev2 local-authentication pre-shared-key VpnSecureKey123!
+!
+!-- SSH Configuration --
+!
+crypto key generate rsa modulus 4096
+ssh version 2
+ssh timeout 15
+ssh 10.255.0.0 255.255.255.0 management
+ssh 172.16.99.0 255.255.255.252 inside
+aaa authentication ssh console LOCAL
+!
+!-- HTTPS Management --
+!
+http server enable
+http 10.255.0.0 255.255.255.0 management
+http 172.16.99.0 255.255.255.252 inside
+!
+!-- Username and Authentication --
+!
+username fwadmin password $sha512$encrypted$hash987654321 privilege 15
+username fwbackup password $sha512$encrypted$hash456789123 privilege 15
+!
+!-- Logging Configuration --
+!
+logging enable
+logging timestamp
+logging buffer-size 51200
+logging buffered informational
+logging trap informational
+logging asdm informational
+logging host inside 172.16.100.20
+logging device-id hostname
+!
+!-- SNMP Configuration --
+!
+snmp-server host inside 172.16.100.20 community SecureComm123
+snmp-server location Main Campus - Security Perimeter
+snmp-server contact netops@campus.university.edu
+snmp-server community SecureComm123
+snmp-server enable traps all
+!
+!-- NTP Configuration --
+!
+ntp server 172.16.100.30 prefer
+ntp server pool.ntp.org
+!
+!-- DNS Configuration --
+!
+dns domain-lookup inside
+dns domain-lookup outside
+dns server-group DefaultDNS
+ name-server 172.16.100.15
+ name-server 8.8.8.8
+ domain-name campus.university.edu
+!
+!-- Connection Limits and Timeouts --
+!
+timeout xlate 3:00:00
+timeout conn 1:00:00 half-closed 0:10:00 udp 0:02:00 icmp 0:00:02
+timeout sunrpc 0:10:00 h323 0:05:00 h225 1:00:00 mgcp 0:05:00
+timeout mgcp-pat 0:05:00 sip 0:30:00 sip_media 0:02:00
+timeout uauth 0:05:00 absolute
+!
+!-- TCP Settings --
+!
+class-map inspection_default
+ match default-inspection-traffic
+!
+policy-map type inspect dns preset_dns_map
+ parameters
+  message-length maximum client auto
+  message-length maximum 512
+!
+policy-map global_policy
+ class inspection_default
+  inspect dns preset_dns_map
+  inspect ftp
+  inspect h323 h225
+  inspect h323 ras
+  inspect ip-options
+  inspect netbios
+  inspect rsh
+  inspect rtsp
+  inspect skinny
+  inspect esmtp
+  inspect sqlnet
+  inspect sunrpc
+  inspect tftp
+  inspect sip
+  inspect xdmcp
+  inspect icmp
+!
+service-policy global_policy global
+!
+!-- Threat Detection --
+!
+threat-detection basic-threat
+threat-detection statistics access-list
+threat-detection statistics tcp-intercept rate-interval 30 burst-rate 400 average-rate 200
+!
+!-- Banner --
+!
+banner login ^C
+*******************************************************************
+*                                                                 *
+*   AUTHORIZED ACCESS ONLY - HQ Campus Firewall                  *
+*   Hostname: HQ-FW-ASA01                                         *
+*                                                                 *
+*   This system is protected by firewall security policies.       *
+*   All connections are monitored, logged, and may be recorded.   *
+*   Unauthorized access attempts will be prosecuted.              *
+*                                                                 *
+*   Contact: Network Security Team                                *
+*   Email: security@campus.university.edu                         *
+*   Emergency: +1-555-SECURITY                                    *
+*                                                                 *
+*******************************************************************
+^C
+!
+banner motd ^C
+HQ Campus Firewall - Authorized Access Only
+All network activity is monitored and logged.
+^C
+!
+!-- Service Policy Rules --
+!
+service-policy global_policy global
+!
+!-- Additional Security Settings --
+!
+no service password-recovery
+service password-encryption
+!
+!-- Call-Home (Disable if not needed) --
+!
+no call-home reporting anonymous
+!
+end

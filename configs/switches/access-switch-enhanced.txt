@@ -1,0 +1,257 @@
+!
+! Cisco Catalyst 2960-X Access Switch Configuration - ENHANCED
+! Hostname: HQ-ACC-SW-HEALTH01
+! Location: Main Campus - Health & Sciences Building - Floor 1
+! Role: Access Layer Switch with Faculty VLAN Segmentation
+! Last Modified: 2024-12-11
+! Author: Trabelsi Mohamed Amine
+! Project: Secure Campus Network System - Master's Degree
+!
+version 15.2
+service timestamps debug datetime msec localtime
+service timestamps log datetime msec localtime
+service password-encryption
+!
+hostname HQ-ACC-SW-HEALTH01
+!
+boot-start-marker
+boot-end-marker
+!
+enable secret 9 $9$2LQFgLvOhWjktE$YzvA82JgLGn6djtlp98mGkB1tFoOfuLm4t/
+!
+no aaa new-model
+!
+ip domain-name campus.university.edu
+!
+!-- VLAN Configuration --
+!
+vlan 10
+ name Management
+!
+vlan 20
+ name Health_Sciences_LAN
+!
+vlan 21
+ name Health_Sciences_WLAN
+!
+vlan 60
+ name Voice_VoIP
+!
+vlan 999
+ name BlackHole
+ shutdown
+!
+!-- Management Interface --
+!
+interface Vlan10
+ description Management Interface
+ ip address 10.255.0.101 255.255.255.0
+ no shutdown
+!
+!-- Default Gateway --
+!
+ip default-gateway 10.255.0.1
+!
+!-- Physical Interface Configuration - User Access Ports --
+!
+interface range FastEthernet0/1-20
+ description Health Sciences LAN - Faculty/Staff Desktops
+ switchport mode access
+ switchport access vlan 20
+ switchport port-security
+ switchport port-security maximum 2
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ no shutdown
+!
+interface range FastEthernet0/21-24
+ description Health Sciences - IP Phones with PC Passthrough
+ switchport mode access
+ switchport access vlan 20
+ switchport voice vlan 60
+ switchport port-security
+ switchport port-security maximum 3
+ switchport port-security violation restrict
+ switchport port-security mac-address sticky
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ mls qos trust cos
+ no shutdown
+!
+!-- Wireless AP Ports --
+!
+interface range GigabitEthernet0/1-4
+ description Wireless Access Points - Health Sciences
+ switchport mode access
+ switchport access vlan 21
+ spanning-tree portfast
+ spanning-tree bpduguard enable
+ power inline auto
+ no shutdown
+!
+!-- Unused Ports - Black Hole VLAN --
+!
+interface range FastEthernet0/25-48
+ description Unused Ports - Security Hardening
+ switchport mode access
+ switchport access vlan 999
+ shutdown
+!
+!-- Trunk Ports to Core/Distribution --
+!
+interface range GigabitEthernet0/47-48
+ description Trunk to Core Switch - EtherChannel
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,21,60
+ channel-group 1 mode active
+ no shutdown
+!
+interface Port-channel1
+ description EtherChannel to Core Layer
+ switchport mode trunk
+ switchport trunk native vlan 999
+ switchport trunk allowed vlan 10,20,21,60
+ spanning-tree guard root
+!
+!-- Extended ACL for SSH Management --
+!
+ip access-list extended ADMIN_SSH
+ remark Network Operations Center
+ permit tcp 10.255.0.0 0.0.0.255 any eq 22
+ deny ip any any log
+!
+!-- SSH Configuration --
+!
+crypto key generate rsa general-keys modulus 2048
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+!
+!-- VTY Line Configuration --
+!
+line vty 0 4
+ transport input ssh
+ access-class ADMIN_SSH in
+ login local
+ exec-timeout 15 0
+ logging synchronous
+!
+line vty 5 15
+ transport input none
+!
+!-- Console Configuration --
+!
+line con 0
+ logging synchronous
+ exec-timeout 30 0
+ login local
+!
+!-- User Configuration --
+!
+username netadmin privilege 15 secret 9 $9$4NPSgNxQjYllvH$Ghi789AbC
+username backup privilege 15 secret 9 $9$5OQThOyRkZmmwI$Jkl012DeF
+!
+!-- SNMP Configuration --
+!
+snmp-server community SecureComm123 RO 10
+snmp-server location "Health Sciences Building - Floor 1 IDF"
+snmp-server contact "netops@campus.university.edu"
+snmp-server host 172.16.100.20 version 2c SecureComm123
+!
+!-- Logging Configuration --
+!
+logging buffered 32768
+logging console warnings
+logging monitor informational
+logging trap notifications
+logging source-interface Vlan10
+logging host 172.16.100.20
+!
+!-- NTP Configuration --
+!
+ntp server 172.16.100.30 prefer
+ntp server 10.255.0.1
+!
+!-- Spanning Tree Configuration --
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree portfast default
+spanning-tree portfast bpduguard default
+!
+!-- Port Security Aging --
+!
+port-security aging time 1440
+port-security aging type inactivity
+!
+!-- QoS Configuration for Voice --
+!
+mls qos
+mls qos map cos-dscp 0 8 16 24 32 46 48 56
+!
+!-- DHCP Snooping --
+!
+ip dhcp snooping
+ip dhcp snooping vlan 20,21,60
+no ip dhcp snooping information option
+!
+interface GigabitEthernet0/47
+ ip dhcp snooping trust
+!
+interface GigabitEthernet0/48
+ ip dhcp snooping trust
+!
+!-- Dynamic ARP Inspection --
+!
+ip arp inspection vlan 20,21,60
+ip arp inspection validate src-mac dst-mac ip
+!
+interface range GigabitEthernet0/47-48
+ ip arp inspection trust
+!
+!-- Banner Configuration --
+!
+banner motd ^C
+*******************************************************************
+*                                                                 *
+*   Health Sciences Building - Access Switch                      *
+*   Hostname: HQ-ACC-SW-HEALTH01                                  *
+*                                                                 *
+*   This switch provides network access for Health & Sciences     *
+*   faculty, staff, and students. All activity is monitored.      *
+*                                                                 *
+*   Port security is enabled. Unauthorized devices will be        *
+*   blocked and logged.                                           *
+*                                                                 *
+*   Contact: Network Operations Center                            *
+*   Email: netops@campus.university.edu                           *
+*   Phone: +1-555-NETWORK                                         *
+*                                                                 *
+*******************************************************************
+^C
+!
+!-- Archive Configuration for Config Backups --
+!
+archive
+ path tftp://172.16.100.20/$h-config-
+ write-memory
+ time-period 1440
+!
+!-- Additional Security Settings --
+!
+no ip http server
+no ip http secure-server
+ip domain-lookup
+ip name-server 172.16.100.15
+!
+!-- Error Disable Recovery --
+!
+errdisable recovery cause bpduguard
+errdisable recovery cause security-violation
+errdisable recovery cause dhcp-rate-limit
+errdisable recovery interval 300
+!
+end

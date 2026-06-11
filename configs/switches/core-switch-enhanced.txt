@@ -1,0 +1,404 @@
+!
+! Cisco Catalyst 3850 Core Switch Configuration - ENHANCED
+! Hostname: HQ-CORE-SW01
+! Location: Main Campus - Core Network Room
+! Role: Core Multilayer Switch with Faculty Segmentation
+! Last Modified: 2024-12-11
+! Author: Trabelsi Mohamed Amine
+! Project: Secure Campus Network System - Master's Degree
+!
+version 16.12
+service timestamps debug datetime msec localtime
+service timestamps log datetime msec localtime
+service password-encryption
+!
+hostname HQ-CORE-SW01
+!
+boot-start-marker
+boot-end-marker
+!
+!-- Strong Authentication --
+enable secret 9 $9$2KPEfKuOgVhisE$Xyru71HfKFm5cisko87kFjA0sEnNetKl3s/
+!
+no aaa new-model
+!
+ip domain-name campus.university.edu
+!
+!-- VLAN Configuration - Faculty-Based Segmentation --
+!
+vlan 10
+ name Management
+!
+vlan 20
+ name Health_Sciences_LAN
+!
+vlan 21
+ name Health_Sciences_WLAN
+!
+vlan 30
+ name Business_LAN
+!
+vlan 31
+ name Business_WLAN
+!
+vlan 40
+ name Engineering_LAN
+!
+vlan 41
+ name Engineering_WLAN
+!
+vlan 50
+ name ArtDesign_LAN
+!
+vlan 51
+ name ArtDesign_WLAN
+!
+vlan 60
+ name Voice_VoIP
+!
+vlan 100
+ name Guest_WiFi
+!
+vlan 172
+ name DMZ_Servers
+!
+vlan 999
+ name BlackHole
+ shutdown
+!
+!-- SVI Configuration with HSRP --
+!
+interface Vlan10
+ description Management Network
+ ip address 10.255.0.2 255.255.255.0
+ ip helper-address 172.16.100.10
+ standby 10 ip 10.255.0.1
+ standby 10 priority 110
+ standby 10 preempt
+ no shutdown
+!
+interface Vlan20
+ description Health & Sciences LAN
+ ip address 192.168.20.1 255.255.252.0
+ ip helper-address 172.16.100.10
+ ip access-group INTER_FACULTY_IN in
+ standby 20 ip 192.168.20.254
+ standby 20 priority 110
+ standby 20 preempt
+ no shutdown
+!
+interface Vlan21
+ description Health & Sciences WLAN
+ ip address 10.20.0.1 255.255.240.0
+ ip helper-address 172.16.100.10
+ ip access-group INTER_FACULTY_IN in
+ standby 21 ip 10.20.0.254
+ standby 21 priority 110
+ standby 21 preempt
+ no shutdown
+!
+interface Vlan30
+ description Business Faculty LAN
+ ip address 192.168.30.1 255.255.252.0
+ ip helper-address 172.16.100.10
+ ip access-group INTER_FACULTY_IN in
+ standby 30 ip 192.168.30.254
+ standby 30 priority 110
+ standby 30 preempt
+ no shutdown
+!
+interface Vlan31
+ description Business Faculty WLAN
+ ip address 10.30.0.1 255.255.240.0
+ ip helper-address 172.16.100.10
+ ip access-group INTER_FACULTY_IN in
+ standby 31 ip 10.30.0.254
+ standby 31 priority 110
+ standby 31 preempt
+ no shutdown
+!
+interface Vlan40
+ description Engineering/Computing LAN
+ ip address 192.168.40.1 255.255.252.0
+ ip helper-address 172.16.100.10
+ ip access-group INTER_FACULTY_IN in
+ standby 40 ip 192.168.40.254
+ standby 40 priority 110
+ standby 40 preempt
+ no shutdown
+!
+interface Vlan41
+ description Engineering/Computing WLAN
+ ip address 10.40.0.1 255.255.240.0
+ ip helper-address 172.16.100.10
+ ip access-group INTER_FACULTY_IN in
+ standby 41 ip 10.40.0.254
+ standby 41 priority 110
+ standby 41 preempt
+ no shutdown
+!
+interface Vlan50
+ description Art/Design Faculty LAN
+ ip address 192.168.50.1 255.255.252.0
+ ip helper-address 172.16.100.10
+ ip access-group INTER_FACULTY_IN in
+ standby 50 ip 192.168.50.254
+ standby 50 priority 110
+ standby 50 preempt
+ no shutdown
+!
+interface Vlan51
+ description Art/Design Faculty WLAN
+ ip address 10.50.0.1 255.255.240.0
+ ip helper-address 172.16.100.10
+ ip access-group INTER_FACULTY_IN in
+ standby 51 ip 10.50.0.254
+ standby 51 priority 110
+ standby 51 preempt
+ no shutdown
+!
+interface Vlan60
+ description Voice/VoIP Network
+ ip address 10.240.0.1 255.255.240.0
+ ip helper-address 172.16.100.10
+ standby 60 ip 10.240.0.254
+ standby 60 priority 110
+ standby 60 preempt
+ no shutdown
+!
+interface Vlan100
+ description Guest WiFi - Internet Only
+ ip address 10.100.0.1 255.255.240.0
+ ip helper-address 172.16.100.10
+ ip access-group GUEST_INTERNET_ONLY in
+ standby 100 ip 10.100.0.254
+ standby 100 priority 110
+ standby 100 preempt
+ no shutdown
+!
+interface Vlan172
+ description DMZ Server Farm
+ ip address 172.16.100.1 255.255.255.0
+ standby 172 ip 172.16.100.254
+ standby 172 priority 110
+ standby 172 preempt
+ no shutdown
+!
+!-- Physical Interface Configuration --
+!
+interface GigabitEthernet1/0/1
+ description Uplink to HQ-FW-ASA01 Outside Interface
+ no switchport
+ ip address 172.16.99.2 255.255.255.252
+ ip nat inside
+ ip ospf 1 area 0
+ ip ospf authentication message-digest
+ ip ospf message-digest-key 1 md5 7 14141B180F0B
+ no shutdown
+!
+interface GigabitEthernet1/0/2
+ description Link to DMZ VLAN
+ switchport access vlan 172
+ switchport mode access
+ spanning-tree portfast
+ no shutdown
+!
+interface range GigabitEthernet1/0/47-48
+ description EtherChannel to Distribution Layer
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,21,30,31,40,41,50,51,60,100
+ switchport trunk native vlan 999
+ channel-group 1 mode active
+ no shutdown
+!
+interface Port-channel1
+ description EtherChannel to Distribution/Access Layer
+ switchport mode trunk
+ switchport trunk allowed vlan 10,20,21,30,31,40,41,50,51,60,100
+ switchport trunk native vlan 999
+ spanning-tree guard root
+!
+!-- OSPF Multi-Area Configuration --
+!
+router ospf 1
+ router-id 10.255.0.2
+ area 0 authentication message-digest
+ network 10.255.0.0 0.0.0.255 area 0
+ network 172.16.99.0 0.0.0.3 area 0
+ network 192.168.20.0 0.0.3.255 area 1
+ network 10.20.0.0 0.0.15.255 area 1
+ network 192.168.30.0 0.0.3.255 area 1
+ network 10.30.0.0 0.0.15.255 area 1
+ network 192.168.40.0 0.0.3.255 area 2
+ network 10.40.0.0 0.0.15.255 area 2
+ network 192.168.50.0 0.0.3.255 area 2
+ network 10.50.0.0 0.0.15.255 area 2
+ network 10.240.0.0 0.0.15.255 area 0
+ network 10.100.0.0 0.0.15.255 area 0
+ network 172.16.100.0 0.0.0.255 area 0
+ passive-interface default
+ no passive-interface GigabitEthernet1/0/1
+ default-information originate
+!
+!-- Extended ACL for Inter-Faculty Communication --
+!
+ip access-list extended INTER_FACULTY_IN
+ remark Allow access to DMZ servers
+ permit ip any 172.16.100.0 0.0.0.255
+ remark Allow access to internet via firewall
+ permit ip any any
+ remark Deny inter-faculty communication (default)
+ remark This would need explicit permits for collaboration
+!
+!-- Extended ACL for Guest Network --
+!
+ip access-list extended GUEST_INTERNET_ONLY
+ remark Allow DNS
+ permit udp any any eq domain
+ remark Allow HTTP/HTTPS
+ permit tcp any any eq 80
+ permit tcp any any eq 443
+ remark Allow DHCP
+ permit udp any eq bootpc any eq bootps
+ remark Deny all internal networks
+ deny ip any 192.168.0.0 0.0.255.255
+ deny ip any 10.0.0.0 0.255.255.255
+ deny ip any 172.16.0.0 0.15.255.255
+ remark Allow to internet
+ permit ip any any
+!
+!-- Extended ACL for SSH Management --
+!
+ip access-list extended ADMIN_SSH
+ remark Network Admin Workstation
+ permit tcp host 10.255.0.100 any eq 22
+ remark Network Operations Center
+ permit tcp 10.255.0.0 0.0.0.255 any eq 22
+ deny ip any any log
+!
+!-- QoS Configuration for Voice Traffic --
+!
+mls qos
+!
+class-map match-all VOICE
+ match ip dscp ef
+!
+policy-map VOICE_PRIORITY
+ class VOICE
+  priority percent 30
+  set dscp ef
+ class class-default
+  fair-queue
+!
+interface Vlan60
+ service-policy output VOICE_PRIORITY
+!
+!-- NAT Configuration for Internet Access --
+!
+ip nat inside source list NAT_POOL interface GigabitEthernet1/0/1 overload
+!
+ip access-list standard NAT_POOL
+ permit 192.168.0.0 0.0.255.255
+ permit 10.0.0.0 0.255.255.255
+!
+!-- SSH and Security Configuration --
+!
+crypto key generate rsa general-keys modulus 4096
+ip ssh version 2
+ip ssh time-out 60
+ip ssh authentication-retries 3
+!
+!-- VTY Line Configuration --
+!
+line vty 0 4
+ transport input ssh
+ access-class ADMIN_SSH in
+ login local
+ exec-timeout 15 0
+ logging synchronous
+!
+line vty 5 15
+ transport input none
+!
+!-- Console Configuration --
+!
+line con 0
+ logging synchronous
+ exec-timeout 30 0
+ login local
+!
+!-- User Configuration --
+!
+username netadmin privilege 15 secret 9 $9$3KPQfLvOhWjjtF$Abc123XyZ
+username backup privilege 15 secret 9 $9$4MPRgMwPiXkkvG$Def456UvW
+!
+!-- Logging Configuration --
+!
+logging buffered 51200
+logging console warnings
+logging monitor informational
+logging trap notifications
+logging source-interface Vlan10
+logging host 172.16.100.20
+!
+!-- SNMP Configuration (v3 for security) --
+!
+snmp-server group NETOPS v3 priv
+snmp-server user snmpadmin NETOPS v3 auth sha AuthPass123 priv aes 128 PrivPass456
+snmp-server location "Main Campus - Core Network Room"
+snmp-server contact "Network Operations Center - netops@university.edu"
+!
+!-- NTP Configuration --
+!
+ntp server 172.16.100.30 prefer
+ntp server pool.ntp.org
+ntp update-calendar
+!
+!-- Banner Configuration --
+!
+banner motd ^C
+*******************************************************************
+*                                                                 *
+*   AUTHORIZED ACCESS ONLY - HQ Campus Core Switch               *
+*   Hostname: HQ-CORE-SW01                                        *
+*                                                                 *
+*   This system is for authorized use only. All activity is       *
+*   monitored and logged. Unauthorized access attempts will be    *
+*   prosecuted to the fullest extent of the law.                  *
+*                                                                 *
+*   Contact: Network Operations Center                            *
+*   Email: netops@campus.university.edu                           *
+*   Phone: +1-555-NETWORK                                         *
+*                                                                 *
+*******************************************************************
+^C
+!
+!-- Spanning Tree Configuration --
+!
+spanning-tree mode rapid-pvst
+spanning-tree extend system-id
+spanning-tree vlan 10,20,21,30,31,40,41,50,51,60,100,172 priority 4096
+spanning-tree portfast bpduguard default
+spanning-tree portfast bpdufilter default
+!
+!-- Additional Security Settings --
+!
+no ip http server
+no ip http secure-server
+ip domain-lookup
+ip name-server 172.16.100.15
+ip name-server 8.8.8.8
+!
+!-- Port Security Default --
+!
+errdisable recovery cause bpduguard
+errdisable recovery interval 300
+!
+!-- Archive Configuration for Config Backups --
+!
+archive
+ path tftp://172.16.100.20/$h-config-
+ write-memory
+ time-period 1440
+!
+end
