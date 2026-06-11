@@ -2,7 +2,8 @@
 
 ## 📐 System Architecture Overview
 
-The Secure Campus Network System implements a **hierarchical three-tier architecture** designed to support a dual-campus university environment with enterprise-grade security, scalability, and high availability.
+The Secure Campus Network System implements a **hierarchical three-tier architecture** designed to support a
+dual-campus university environment with enterprise-grade security, scalability, and high availability.
 
 ## 🎯 Design Principles
 
@@ -267,4 +268,5 @@ Cloud Integration
 
 ---
 
-> 🏗️ **Architecture Status**: Production Ready | 🎯 **Scalability**: 100% Growth Support | 🔒 **Security**: Enterprise Grade
+> 🏗️ **Architecture Status**: Production Ready | 🎯 **Scalability**: 100% Growth Support |
+> 🔒 **Security**: Enterprise Grade

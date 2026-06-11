@@ -11,7 +11,8 @@
 
 ## 🎯 Academic Objectives
 
-This project was developed as part of my Master's degree program to demonstrate comprehensive understanding and practical application of:
+This project was developed as part of my Master's degree program to demonstrate comprehensive understanding
+and practical application of:
 
 ### 🔧 Technical Competencies
 - **Network Architecture Design**: Hierarchical 3-tier enterprise design
@@ -152,7 +153,8 @@ This project demonstrates:
 
 **Academic Achievement** • **Technical Innovation** • **Professional Quality**
 
-This project represents the culmination of advanced networking studies and practical application of enterprise-grade network design principles.
+This project represents the culmination of advanced networking studies and practical application of
+enterprise-grade network design principles.
 
 **Student**: [Trabelsi Mohamed Amine](https://www.linkedin.com/in/trabelsi-mohamed-amine) | **GitHub**: [trabelssi](https://github.com/trabelssi)
 

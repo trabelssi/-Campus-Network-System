@@ -2,7 +2,8 @@
 
 ## 🚨 Common Issues and Solutions
 
-This comprehensive troubleshooting guide covers common issues you may encounter in the Secure Campus Network System and provides step-by-step solutions.
+This comprehensive troubleshooting guide covers common issues you may encounter in the Secure Campus Network
+System and provides step-by-step solutions.
 
 ## 📋 Quick Reference
 

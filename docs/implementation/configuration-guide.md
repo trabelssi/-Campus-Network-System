@@ -2,7 +2,8 @@
 
 ## 🎯 Implementation Overview
 
-This guide provides step-by-step configuration procedures for implementing the Secure Campus Network System. Follow the phases sequentially to ensure proper network convergence and functionality.
+This guide provides step-by-step configuration procedures for implementing the Secure Campus Network System.
+Follow the phases sequentially to ensure proper network convergence and functionality.
 
 ## 📋 Implementation Phases
 

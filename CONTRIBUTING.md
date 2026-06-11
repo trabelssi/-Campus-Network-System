@@ -1,6 +1,6 @@
 # 🤝 Contributing to Secure Campus Network System
 
-Thank you for your interest in contributing to the Secure Campus Network System project! This document provides 
+Thank you for your interest in contributing to the Secure Campus Network System project! This document provides
 guidelines for contributing to this enterprise network design and implementation project.
 
 ## 📋 Table of Contents
@@ -16,10 +16,12 @@ guidelines for contributing to this enterprise network design and implementation
 ## 🎯 Code of Conduct
 
 ### Our Pledge
-We are committed to providing a welcoming and inclusive experience for all contributors, regardless of 
+
+We are committed to providing a welcoming and inclusive experience for all contributors, regardless of
 experience level, background, or expertise in networking.
 
 ### Expected Behavior
+
 - **Professional Communication**: Use clear, respectful language in all interactions
 - **Constructive Feedback**: Provide helpful suggestions and explanations
 - **Knowledge Sharing**: Help others learn networking concepts and best practices
@@ -288,12 +290,15 @@ Contributors will be recognized in the project through:
 
 ### Communication Channels
 - **Issues**: Use GitHub issues for bugs and feature requests
-- **Discussions**: Use GitHub discussions for questions and ideas  
-- **LinkedIn**: Connect with [Trabelsi Mohamed Amine](https://www.linkedin.com/in/trabelsi-mohamed-amine)
+- **Discussions**: Use GitHub discussions for questions and ideas
+- **LinkedIn**: Connect with
+  [Trabelsi Mohamed Amine](https://www.linkedin.com/in/trabelsi-mohamed-amine)
 - **Documentation**: Check existing docs before asking questions
 
 ### Asking Questions
+
 When asking for help:
+
 1. Search existing issues and documentation first
 2. Provide clear problem description
 3. Include relevant network diagrams
@@ -302,10 +307,12 @@ When asking for help:
 
 ## 📄 License
 
-By contributing to this project, you agree that your contributions will be licensed under the same license as the project (MIT License).
+By contributing to this project, you agree that your contributions will be licensed under the same license as
+the project (MIT License).
 
 ---
 
 > 🤝 **Community Driven** | 📚 **Knowledge Sharing** | 🏆 **Excellence in Networking**
 
-Thank you for contributing to the Secure Campus Network System project! Your expertise helps create better network designs and educational resources for the community.
+Thank you for contributing to the Secure Campus Network System project! Your expertise helps create better
+network designs and educational resources for the community.

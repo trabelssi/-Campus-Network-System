@@ -9,9 +9,9 @@
 
 ## 📋 Project Overview
 
-A comprehensive **enterprise-grade network infrastructure** designed for a dual-campus university system supporting 
-30,000+ users with projected growth to 60,000 by 2025. This Master's degree project demonstrates advanced network 
-design principles, enterprise security implementation, and scalable infrastructure planning following Cisco best 
+A comprehensive **enterprise-grade network infrastructure** designed for a dual-campus university system supporting
+30,000+ users with projected growth to 60,000 by 2025. This Master's degree project demonstrates advanced network
+design principles, enterprise security implementation, and scalable infrastructure planning following Cisco best
 practices and industry standards.
 
 ### 🎯 Key Features
@@ -49,7 +49,7 @@ practices and industry standards.
 ![IP Addressing Diagram](assets/images/ip-addressing-diagram.png)
 
 | Network Type | IP Range | Hosts | Purpose |
-|-------------|----------|-------|---------|
+| ----------- | -------- | ----- | ------- |
 | **Management** | `172.16.10.0/24` | 254 | Network management |
 | **WLAN** | `10.10.0.0/16` | 65,534 | Wireless clients |
 | **LAN** | `192.168.0.0/16` | 65,534 | Wired clients |
@@ -82,7 +82,7 @@ practices and industry standards.
 ```text
 VLAN 10  - Management Network
 VLAN 20  - LAN Users
-VLAN 50  - WLAN Users  
+VLAN 50  - WLAN Users
 VLAN 199 - Black Hole (Unused Ports)
 ```
 
@@ -104,21 +104,21 @@ VLAN 199 - Black Hole (Unused Ports)
 
 ### Phase 2: Core Services
 
-4. **EtherChannel Configuration**
-5. **IP Addressing & Subnetting**
-6. **HSRP & Inter-VLAN Routing**
+1. **EtherChannel Configuration**
+2. **IP Addressing & Subnetting**
+3. **HSRP & Inter-VLAN Routing**
 
 ### Phase 3: Advanced Features
 
-7. **DHCP Server Deployment**
-8. **OSPF Routing Protocol**
-9. **Firewall Security Policies**
+1. **DHCP Server Deployment**
+2. **OSPF Routing Protocol**
+3. **Firewall Security Policies**
 
 ### Phase 4: Connectivity & Testing
 
-10. **Wireless Network Setup**
-11. **IPsec VPN Configuration**
-12. **End-to-end Testing & Validation**
+1. **Wireless Network Setup**
+2. **IPsec VPN Configuration**
+3. **End-to-end Testing & Validation**
 
 ## 📁 Project Structure
 
@@ -178,7 +178,8 @@ secure-campus-network/
 
 ## 🖥️ How to Open the Simulation
 
-1. Download and install [Cisco Packet Tracer 8.x](https://www.netacad.com/courses/packet-tracer) (free with Cisco NetAcad account)
+1. Download and install [Cisco Packet Tracer 8.x](https://www.netacad.com/courses/packet-tracer)
+   (free with Cisco NetAcad account)
 2. Clone this repository: `git clone https://github.com/trabelssi/-Campus-Network-System.git`
 3. Open Cisco Packet Tracer
 4. Go to File → Open → navigate to `assets/packet-tracer/campus-network-simulation.pkt`
@@ -196,7 +197,7 @@ secure-campus-network/
 This project represents enterprise network design best practices. We welcome contributions from:
 
 - 🎓 **Students**: Learning network design and implementation
-- 👨‍💼 **Professionals**: Sharing industry expertise and improvements  
+- 👨‍💼 **Professionals**: Sharing industry expertise and improvements
 - 🔧 **Engineers**: Optimizing configurations and adding features
 - 📚 **Educators**: Enhancing documentation and learning materials
 
@@ -207,20 +208,17 @@ Please review our [Contributing Guidelines](CONTRIBUTING.md) before submitting c
 See [CHANGELOG.md](CHANGELOG.md) for detailed version history and feature updates.
 
 - 🔧 Network design improvements
-- 📚 Documentation enhancements  
+- 📚 Documentation enhancements
 - 🧪 Testing and validation
 - 🛠️ Automation tools
-
-## 📋 Changelog
-
-See [CHANGELOG.md](CHANGELOG.md) for detailed version history and feature updates.
 
 ## 📚 Additional Resources
 
 - 📖 [Architecture Documentation](docs/ARCHITECTURE.md) - Detailed system architecture
 - 🚀 [Deployment Guide](docs/DEPLOYMENT-GUIDE.md) - Step-by-step deployment
 - 🔧 [Troubleshooting Guide](docs/TROUBLESHOOTING.md) - Common issues and solutions
-- ⚙️ [Configuration Examples](docs/implementation/configuration-guide.md) - Device configurations
+- ⚙️ [Configuration Examples](docs/implementation/configuration-guide.md) -
+  Device configurations
 
 ## 🎓 Learning Outcomes
 
@@ -276,8 +274,11 @@ For questions or collaboration opportunities:
 [![Network Design](https://img.shields.io/badge/design-enterprise-orange)](docs/ARCHITECTURE.md)
 [![Academic Project](https://img.shields.io/badge/academic-master's%20degree-purple)](https://www.linkedin.com/in/trabelsi-mohamed-amine)
 
-**Author**: [Trabelsi Mohamed Amine](https://github.com/trabelssi) | **LinkedIn**: [Profile](https://www.linkedin.com/in/trabelsi-mohamed-amine)
+**Author**: [Trabelsi Mohamed Amine](https://github.com/trabelssi) |
+**LinkedIn**: [Profile](https://www.linkedin.com/in/trabelsi-mohamed-amine)
 
 </div>
 
-<!-- After pushing, go to your repo → click the gear icon ⚙️ next to "About" → add topics: cisco, packet-tracer, networking, network-security, ospf, vlan, ipsec-vpn, hsrp, campus-network -->
+<!-- After pushing, go to your repo → click the gear icon ⚙️ next to "About" →
+add topics: cisco, packet-tracer, networking, network-security, ospf, vlan,
+ipsec-vpn, hsrp, campus-network -->

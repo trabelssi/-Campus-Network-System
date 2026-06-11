@@ -2,7 +2,8 @@
 
 ## 🎯 Testing Strategy Overview
 
-This document outlines comprehensive testing procedures to validate the Secure Campus Network System implementation. Testing follows a systematic approach from basic connectivity through advanced security features.
+This document outlines comprehensive testing procedures to validate the Secure Campus Network System implementation.
+Testing follows a systematic approach from basic connectivity through advanced security features.
 
 ## 📋 Testing Phase Structure
 
